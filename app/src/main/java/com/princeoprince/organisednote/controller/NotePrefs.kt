@@ -11,7 +11,11 @@ class NotePrefs(private val sharedPrefs: SharedPreferences) {
             .apply()
     }
 
-    fun getNoteSortOrder()  = NoteSortOrder.FILENAME_ASC
+    fun getNoteSortOrder()  =
+        NoteSortOrder.valueOf(
+            sharedPrefs.getString(KEY_NOTE_SORT_PREFERENCE, DEFAULT_SORT_ORDER)
+                ?: DEFAULT_SORT_ORDER
+        )
 
     fun saveNotePriorityFilters(priorities: Set<String>) {
         sharedPrefs.edit()
@@ -19,10 +23,13 @@ class NotePrefs(private val sharedPrefs: SharedPreferences) {
             .apply()
     }
 
-    fun getNotePriorityFilters(): Set<String> = setOf()
+    fun getNotePriorityFilters(): Set<String> =
+        sharedPrefs.getStringSet(KEY_NOTE_PRIORITY_SET,
+            setOf(DEFAULT_PRIORITY_FILTER))
+            ?: setOf(DEFAULT_PRIORITY_FILTER)
 
     fun saveNoteBackgroundColour(noteBackgroundColour: String) {
-        sharedPrefs.edit()
+       sharedPrefs.edit()
             .putString(KEY_APP_BACKGROUND_COLOUR, noteBackgroundColour)
             .apply()
     }
