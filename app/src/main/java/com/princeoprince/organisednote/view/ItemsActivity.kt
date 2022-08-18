@@ -25,10 +25,16 @@ class ItemsActivity : AppCompatActivity(), NoteDialogFragment.NoticeNoteDialogLi
         NotePrefs(PreferenceManager.getDefaultSharedPreferences(this))
     }
 
-    private val priorities: MutableSet<String> = mutableSetOf()
+    private val priorities by lazy {
+        notePrefs.getNotePriorityFilters().toMutableSet()
+    }
 
     private val noteAdapter: NoteAdapter by lazy {
-        NoteAdapter(this, priorities, NoteSortOrder.FILENAME_ASC, ::showNoteDialog)
+        NoteAdapter(
+            this,
+            priorities,
+            notePrefs.getNoteSortOrder(),  // Read from preferences
+            ::showNoteDialog)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -186,10 +192,12 @@ class ItemsActivity : AppCompatActivity(), NoteDialogFragment.NoticeNoteDialogLi
 
     private fun updateNoteSortOrder(sortOrder: NoteSortOrder) {
         noteAdapter.updateNotesFilters(order = sortOrder)
+        notePrefs.saveNoteSortOrder(sortOrder)
     }
 
     private fun updateNotePrioritiesFilter(priorities: Set<String>) {
         noteAdapter.updateNotesFilters(priorities = priorities)
+        notePrefs.saveNotePriorityFilters(priorities)
     }
 
     private fun togglePriorityState(priority: String, isActive: Boolean) {
