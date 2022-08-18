@@ -1,21 +1,22 @@
 package com.princeoprince.organisednote.controller
 
 import android.content.SharedPreferences
-import com.princeoprince.organisednote.utils.AppBackgroundColour
-import com.princeoprince.organisednote.utils.DEFAULT_COLOUR
-import com.princeoprince.organisednote.utils.KEY_APP_BACKGROUND_COLOUR
-import com.princeoprince.organisednote.utils.NoteSortOrder
+import com.princeoprince.organisednote.utils.*
 
 class NotePrefs(private val sharedPrefs: SharedPreferences) {
 
     fun saveNoteSortOrder(noteSortOrder: NoteSortOrder) {
-
+        sharedPrefs.edit()
+            .putString(KEY_NOTE_SORT_PREFERENCE, noteSortOrder.name)
+            .apply()
     }
 
     fun getNoteSortOrder()  = NoteSortOrder.FILENAME_ASC
 
     fun saveNotePriorityFilters(priorities: Set<String>) {
-
+        sharedPrefs.edit()
+            .putStringSet(KEY_NOTE_PRIORITY_SET, priorities)
+            .apply()
     }
 
     fun getNotePriorityFilters(): Set<String> = setOf()
